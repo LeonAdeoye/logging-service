@@ -15,7 +15,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @RestController
 public class MainController
 {
-    private static final Logger logger = LoggerFactory.getLogger(MainController.class);
+    private static final Logger loggerInstance = LoggerFactory.getLogger(MainController.class);
     @Autowired
     private ConfigurationService configurationService;
     @Autowired
@@ -24,27 +24,39 @@ public class MainController
     @RequestMapping("/reconfigure")
     public void reconfigure()
     {
-        logger.info("Received request to reconfigure.");
+        loggerInstance.info("Received request to reconfigure.");
         this.configurationService.reconfigure();
     }
 
     @CrossOrigin
     @RequestMapping(value = "/log", method=POST)
-    public void log(@RequestParam String owner, @RequestParam String message) throws IllegalArgumentException
+    public void log(@RequestParam String logger, @RequestParam String level, @RequestParam String timestamp, @RequestParam String message) throws IllegalArgumentException
     {
-        if(owner == null || owner.isEmpty())
+        if(logger == null || logger.isEmpty())
         {
-            logger.error("The log owner request param cannot be null or empty.");
-            throw new IllegalArgumentException("Log owner argument is invalid");
+            loggerInstance.error("The logger request param cannot be null or empty.");
+            throw new IllegalArgumentException("Logger argument is invalid.");
         }
 
         if(message == null || message.isEmpty())
         {
-            logger.error("The log message request param cannot be null or empty");
-            throw new IllegalArgumentException("Log message argument is invalid");
+            loggerInstance.error("The message request param cannot be null or empty.");
+            throw new IllegalArgumentException("Message argument is invalid.");
         }
 
-        logger.info("Received request to log information.");
-        this.loggingService.log(owner, message);
+        if(level == null || level.isEmpty())
+        {
+            loggerInstance.error("The level request param cannot be null or empty.");
+            throw new IllegalArgumentException("Level message argument is invalid.");
+        }
+
+        if(timestamp == null || timestamp.isEmpty())
+        {
+            loggerInstance.error("The timestamp request param cannot be null or empty.");
+            throw new IllegalArgumentException("Timestamp argument is invalid.");
+        }
+
+        loggerInstance.info("Received request to log information.");
+        this.loggingService.log(logger, level, timestamp, message);
     }
 }

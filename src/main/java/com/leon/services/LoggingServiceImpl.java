@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 public class LoggingServiceImpl implements LoggingService
 {
     @Override
-    public void log(String owner, String message)
+    public void log(String logger, String level, String timestamp, String message)
     {
     }
 }
