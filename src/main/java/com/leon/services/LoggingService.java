@@ -2,5 +2,5 @@ package com.leon.services;
 
 public interface LoggingService
 {
-    public void log();
+    void log(String owner, String message);
 }
