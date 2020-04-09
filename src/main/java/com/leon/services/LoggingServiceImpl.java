@@ -7,10 +7,22 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.core.util.StatusPrinter;
+
+import javax.annotation.PostConstruct;
+
 @Service
 public class LoggingServiceImpl implements LoggingService
 {
     private Map<String,Logger> loggers = new HashMap<>();
+
+    @PostConstruct
+    public void initialize()
+    {
+        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+        StatusPrinter.print(lc);
+    }
 
     @Override
     public void log(String logger, String level, String message)

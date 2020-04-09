@@ -50,7 +50,6 @@ public class MainController
             throw new IllegalArgumentException("Level message argument is invalid.");
         }
 
-        loggerInstance.info("Received request to log information.");
         this.loggingService.log(logger, level, message);
     }
 }
