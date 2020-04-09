@@ -46,6 +46,15 @@ public class LoggingServiceImpl implements LoggingService
             case "INFO":
                 loggerInstance.info(message);
                 break;
+            case "WARN":
+                loggerInstance.warn(message);
+                break;
+            case "TRACE":
+                loggerInstance.trace(message);
+                break;
+            case "ERROR":
+                loggerInstance.error(message);
+                break;
         }
     }
 }
