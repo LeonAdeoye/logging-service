@@ -30,7 +30,7 @@ public class MainController
 
     @CrossOrigin
     @RequestMapping(value = "/log", method=POST)
-    public void log(@RequestParam String logger, @RequestParam String level, @RequestParam String timestamp, @RequestParam String message) throws IllegalArgumentException
+    public void log(@RequestParam String logger, @RequestParam String level, @RequestParam String message) throws IllegalArgumentException
     {
         if(logger == null || logger.isEmpty())
         {
@@ -50,13 +50,7 @@ public class MainController
             throw new IllegalArgumentException("Level message argument is invalid.");
         }
 
-        if(timestamp == null || timestamp.isEmpty())
-        {
-            loggerInstance.error("The timestamp request param cannot be null or empty.");
-            throw new IllegalArgumentException("Timestamp argument is invalid.");
-        }
-
         loggerInstance.info("Received request to log information.");
-        this.loggingService.log(logger, level, timestamp, message);
+        this.loggingService.log(logger, level, message);
     }
 }

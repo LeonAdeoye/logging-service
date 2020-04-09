@@ -37,13 +37,12 @@ public class MainControllerTest
         mockMVC.perform(MockMvcRequestBuilders.post("/log")
                 .param("logger", "Horatio")
                 .param("level", "DEBUG")
-                .param("timestamp", "20121223")
                 .param("message", "Hello Papa")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
         // Assert
-        verify(loggingServiceMock, times(1)).log("Horatio", "DEBUG", "20121223", "Hello Papa");
+        verify(loggingServiceMock, times(1)).log("Horatio", "DEBUG", "Hello Papa");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -55,13 +54,12 @@ public class MainControllerTest
             mockMVC.perform(MockMvcRequestBuilders.post("/log")
                     .param("logger", "")
                     .param("level", "DEBUG")
-                    .param("timestamp", "20121223")
                     .param("message", "Hello Papa"));
         }
         catch(NestedServletException e)
         {
             // Assert
-            verify(loggingServiceMock, never()).log("", "DEBUG", "20121223", "Hello Papa");
+            verify(loggingServiceMock, never()).log("", "DEBUG", "Hello Papa");
             assertNotNull( e );
             assertNotNull( e.getCause() );
             assertTrue( e.getCause() instanceof IllegalArgumentException );
@@ -78,13 +76,12 @@ public class MainControllerTest
             mockMVC.perform(MockMvcRequestBuilders.post("/log")
                     .param("logger", "Horatio")
                     .param("level", "DEBUG")
-                    .param("timestamp", "20121223")
                     .param("message", ""));
         }
         catch(NestedServletException e)
         {
             // Assert
-            verify(loggingServiceMock, never()).log("Horatio", "DEBUG", "20121223", "");
+            verify(loggingServiceMock, never()).log("Horatio", "DEBUG", "");
             assertNotNull( e );
             assertNotNull( e.getCause() );
             assertTrue( e.getCause() instanceof IllegalArgumentException );
@@ -101,36 +98,12 @@ public class MainControllerTest
             mockMVC.perform(MockMvcRequestBuilders.post("/log")
                     .param("logger", "Horatio")
                     .param("level", "")
-                    .param("timestamp", "20121223")
                     .param("message", "Hello Papa"));
         }
         catch(NestedServletException e)
         {
             // Assert
-            verify(loggingServiceMock, never()).log("Horatio", "", "20121223", "Hello Papa");
-            assertNotNull( e );
-            assertNotNull( e.getCause() );
-            assertTrue( e.getCause() instanceof IllegalArgumentException );
-            throw e.getCause();
-        }
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void log_whenPassedInvalidTimestampRequestParam_shouldNotCallLoggingServiceLogMethodAndShouldThrowException() throws Throwable
-    {
-        try
-        {
-            // Act
-            mockMVC.perform(MockMvcRequestBuilders.post("/log")
-                    .param("logger", "Horatio")
-                    .param("level", "DEBUG")
-                    .param("timestamp", "")
-                    .param("message", "Hello Papa"));
-        }
-        catch(NestedServletException e)
-        {
-            // Assert
-            verify(loggingServiceMock, never()).log("Horatio", "DEBUG", "", "Hello Papa");
+            verify(loggingServiceMock, never()).log("Horatio", "", "Hello Papa");
             assertNotNull( e );
             assertNotNull( e.getCause() );
             assertTrue( e.getCause() instanceof IllegalArgumentException );
