@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import ch.qos.logback.classic.LoggerContext;
@@ -81,20 +80,22 @@ public class LoggingServiceImpl implements LoggingService
     {
         RollingFileAppender<ILoggingEvent> appender = new RollingFileAppender<>();
         TimeBasedRollingPolicy rollingPolicy = new TimeBasedRollingPolicy();
-        rollingPolicy.setFileNamePattern("%d{yyyy-MM-dd_HH-mm}.log");
+        rollingPolicy.setFileNamePattern("../logs/" + loggerName + ".log.%d{yyyy-MM-dd}");
         rollingPolicy.setParent(appender);
         rollingPolicy.setContext(loggerContext);
+        rollingPolicy.setMaxHistory(7);
         rollingPolicy.start();
+        rollingPolicy.setCleanHistoryOnStart(true);
 
         PatternLayoutEncoder encoder = new PatternLayoutEncoder();
         encoder.setContext(loggerContext);
-        encoder.setPattern("%msg%n");
+        encoder.setPattern("%d %-5level %msg%n");
         encoder.start();
 
         appender.setContext(loggerContext);
         appender.setRollingPolicy(rollingPolicy);
         appender.setEncoder(encoder);
-        appender.setFile("../logs/" + loggerName);
+        appender.setFile("../logs/" + loggerName + ".log");
         appender.setAppend(true);
         appender.start();
 
