@@ -41,9 +41,9 @@ public class LoggingServiceImpl implements LoggingService
     }
 
     @Override
-    public void log(String logger, String level, String message)
+    public void log(String loggerName, String level, String message)
     {
-        logMessage(getLogger(logger), level, message);
+        logMessage(getLogger(loggerName), level, message);
     }
 
     private void logMessage(Logger loggerInstance, String level, String message)
