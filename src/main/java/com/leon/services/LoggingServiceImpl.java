@@ -27,7 +27,7 @@ public class LoggingServiceImpl implements LoggingService
     private LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
 
     @PostConstruct
-    public void checkForLogdirectory() throws FileNotFoundException
+    public void checkForLogsDirectory()
     {
         File f = new File("../logs");
         if (f.exists() && f.isDirectory())
@@ -94,7 +94,7 @@ public class LoggingServiceImpl implements LoggingService
         appender.setContext(loggerContext);
         appender.setRollingPolicy(rollingPolicy);
         appender.setEncoder(encoder);
-        appender.setFile(loggerName);
+        appender.setFile("../logs/" + loggerName);
         appender.setAppend(true);
         appender.start();
 
