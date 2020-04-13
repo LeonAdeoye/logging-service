@@ -6,17 +6,40 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.core.rolling.RollingFileAppender;
 import ch.qos.logback.classic.Logger;
 
+import javax.annotation.PostConstruct;
+
+import static java.lang.System.exit;
+
 @Service
 public class LoggingServiceImpl implements LoggingService
 {
+    private static final org.slf4j.Logger loggerInstance = LoggerFactory.getLogger(LoggingServiceImpl.class);
     private static Map<String,Logger> loggerMap = new HashMap<>();
     private LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+
+    @PostConstruct
+    public void checkForLogdirectory() throws FileNotFoundException
+    {
+        File f = new File("../logs");
+        if (f.exists() && f.isDirectory())
+        {
+            loggerInstance.info("Detected a '../logs' directory to hold app log files.");
+        }
+        else
+        {
+            loggerInstance.error("A ../logs directory to hold app log files could not be detected. This micro-service will now terminate.");
+            exit(1);
+        }
+    }
 
     @Override
     public void log(String logger, String level, String message)
