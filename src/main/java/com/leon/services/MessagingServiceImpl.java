@@ -18,7 +18,7 @@ public class MessagingServiceImpl implements MessagingService
 {
     private RestTemplate restTemplate = new RestTemplate();
     private static final Logger logger = LoggerFactory.getLogger(MessagingServiceImpl.class);
-    private static final String configurationServiceURL = "http://localhost:1201";
+    private static final String configurationServiceURL = "http://localhost:20001";
 
     public void saveConfiguration(Configuration configuration)
     {
