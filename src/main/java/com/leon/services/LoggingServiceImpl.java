@@ -31,11 +31,11 @@ public class LoggingServiceImpl implements LoggingService
         File f = new File("../logs");
         if (f.exists() && f.isDirectory())
         {
-            loggerInstance.info("Detected a '../logs' directory to hold app log files.");
+            loggerInstance.info("Detected a '../logs' directory which will persist the app log files.");
         }
         else
         {
-            loggerInstance.error("A ../logs directory to hold app log files could not be detected. This micro-service will now terminate.");
+            loggerInstance.error("A ../logs directory to persist app log files could not be detected. This is a fatal error so the micro-service will now terminate.");
             exit(1);
         }
     }
