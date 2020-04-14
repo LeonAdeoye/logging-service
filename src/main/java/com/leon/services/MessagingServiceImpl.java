@@ -39,8 +39,6 @@ public class MessagingServiceImpl implements MessagingService
 
             List<Configuration> configurations = response.getBody();
 
-            logger.info("Loaded configurations:" + configurations);
-
             return configurations;
         }
         catch(RestClientException rce)

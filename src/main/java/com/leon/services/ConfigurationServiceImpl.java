@@ -49,7 +49,8 @@ public class ConfigurationServiceImpl implements ConfigurationService
     {
         List<Configuration> loadedConfigurations = this.messagingService.loadAllConfigurations();
         configurations = loadedConfigurations.stream().collect(Collectors.groupingBy(Configuration::getKey, Collectors.groupingBy(Configuration::getOwner)));
-        logger.info("Retrieved configurations: " + configurations);
+        logger.info("Retrieved " + loadedConfigurations.size() + " configurations from the persistence store:\n"
+                + loadedConfigurations.stream().map(config -> config + "\n").collect(Collectors.joining()));
     }
 
     @Override
