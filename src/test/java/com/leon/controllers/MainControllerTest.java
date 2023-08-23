@@ -31,14 +31,15 @@ public class MainControllerTest
     private LoggingService loggingServiceMock;
 
     @Test
-    public void log_whenPassedValidRequestParams_shouldCallLoggingServiceLogMethod() throws Exception
+    public void log_whenPassedValidBody_shouldCallLoggingServiceLogMethod() throws Exception
     {
+        // Arrange
+        String body = "{\"logger\":\"Horatio\",\"level\":\"DEBUG\",\"message\":\"Hello Papa\"}";
+
         // Act
         mockMVC.perform(MockMvcRequestBuilders.post("/log")
-                .param("logger", "Horatio")
-                .param("level", "DEBUG")
-                .param("message", "Hello Papa")
-                .accept(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
                 .andExpect(status().isOk());
 
         // Assert
@@ -46,15 +47,17 @@ public class MainControllerTest
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void log_whenPassedInvalidLoggerRequestParam_shouldNotCallLoggingServiceLogMethodAndShouldThrowException() throws Throwable
+    public void log_whenPassedInvalidLoggerInBody_shouldNotCallLoggingServiceLogMethodAndShouldThrowException() throws Throwable
     {
         try
         {
+            // Arrange
+            String body = "{\"logger\":\"\",\"level\":\"DEBUG\",\"message\":\"Hello Papa\"}";
+
             // Act
             mockMVC.perform(MockMvcRequestBuilders.post("/log")
-                    .param("logger", "")
-                    .param("level", "DEBUG")
-                    .param("message", "Hello Papa"));
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(body));
         }
         catch(NestedServletException e)
         {
@@ -68,15 +71,17 @@ public class MainControllerTest
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void log_whenPassedInvalidMessageRequestParam_shouldNotCallLoggingServiceLogMethodAndShouldThrowException() throws Throwable
+    public void log_whenPassedInvalidMessageInBody_shouldNotCallLoggingServiceLogMethodAndShouldThrowException() throws Throwable
     {
         try
         {
+            // Arrange
+            String body = "{\"logger\":\"Horatio\",\"level\":\"DEBUG\",\"message\":\"\"}";
+
             // Act
             mockMVC.perform(MockMvcRequestBuilders.post("/log")
-                    .param("logger", "Horatio")
-                    .param("level", "DEBUG")
-                    .param("message", ""));
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(body));
         }
         catch(NestedServletException e)
         {
@@ -90,20 +95,94 @@ public class MainControllerTest
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void log_whenPassedInvalidLevelRequestParam_shouldNotCallLoggingServiceLogMethodAndShouldThrowException() throws Throwable
+    public void log_whenPassedInvalidLevelInBody_shouldNotCallLoggingServiceLogMethodAndShouldThrowException() throws Throwable
     {
         try
         {
+            // Arrange
+            String body = "{\"logger\":\"Horatio\",\"level\":\"\",\"message\":\"Hello Papa\"}";
+
             // Act
             mockMVC.perform(MockMvcRequestBuilders.post("/log")
-                    .param("logger", "Horatio")
-                    .param("level", "")
-                    .param("message", "Hello Papa"));
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(body));
         }
         catch(NestedServletException e)
         {
             // Assert
             verify(loggingServiceMock, never()).log("Horatio", "", "Hello Papa");
+            assertNotNull( e );
+            assertNotNull( e.getCause() );
+            assertTrue( e.getCause() instanceof IllegalArgumentException );
+            throw e.getCause();
+        }
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void log_whenPassedNullLevelInBody_shouldNotCallLoggingServiceLogMethodAndShouldThrowException() throws Throwable
+    {
+        try
+        {
+            // Arrange
+            String body = "{\"logger\":\"Horatio\",\"level\":null,\"message\":\"Hello Papa\"}";
+
+            // Act
+            mockMVC.perform(MockMvcRequestBuilders.post("/log")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(body));
+        }
+        catch(NestedServletException e)
+        {
+            // Assert
+            verify(loggingServiceMock, never()).log("Horatio", null, "Hello Papa");
+            assertNotNull( e );
+            assertNotNull( e.getCause() );
+            assertTrue( e.getCause() instanceof IllegalArgumentException );
+            throw e.getCause();
+        }
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void log_whenPassedNullLoggerInBody_shouldNotCallLoggingServiceLogMethodAndShouldThrowException() throws Throwable
+    {
+        try
+        {
+            // Arrange
+            String body = "{\"logger\":null,\"level\":\"DEBUG\",\"message\":\"Hello Papa\"}";
+
+            // Act
+            mockMVC.perform(MockMvcRequestBuilders.post("/log")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(body));
+        }
+        catch(NestedServletException e)
+        {
+            // Assert
+            verify(loggingServiceMock, never()).log(null, "DEBUG", "Hello Papa");
+            assertNotNull( e );
+            assertNotNull( e.getCause() );
+            assertTrue( e.getCause() instanceof IllegalArgumentException );
+            throw e.getCause();
+        }
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void log_whenPassedNullMessageInBody_shouldNotCallLoggingServiceLogMethodAndShouldThrowException() throws Throwable
+    {
+        try
+        {
+            // Arrange
+            String body = "{\"logger\":\"Horatio\",\"level\":\"DEBUG\",\"message\":null}";
+
+            // Act
+            mockMVC.perform(MockMvcRequestBuilders.post("/log")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(body));
+        }
+        catch(NestedServletException e)
+        {
+            // Assert
+            verify(loggingServiceMock, never()).log("Horatio", "DEBUG", null);
             assertNotNull( e );
             assertNotNull( e.getCause() );
             assertTrue( e.getCause() instanceof IllegalArgumentException );
